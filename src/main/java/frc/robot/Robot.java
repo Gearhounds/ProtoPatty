@@ -4,11 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-//import com.ctre.phoenix.motorcontrol.can.WPI_talonFX;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+
+//import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 
@@ -23,6 +26,18 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
+  Joystick driverStick = new Joystick(0);
+
+  private WPI_TalonFX frontLeft = new WPI_TalonFX(2);
+  private WPI_TalonFX backLeft = new WPI_TalonFX(1);
+  private WPI_TalonFX frontRight = new WPI_TalonFX(6);
+  private WPI_TalonFX backRight = new WPI_TalonFX(5);
+
+  MotorControllerGroup left = new MotorControllerGroup(frontLeft, backLeft);
+  MotorControllerGroup right = new MotorControllerGroup(frontRight,backRight);
+
+  DifferentialDrive drive = new DifferentialDrive(left, right);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -83,7 +98,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-
+    drive.arcadeDrive(driverStick.getRawAxis(1),driverStick.getRawAxis(4));
   }
 
   /** This function is called once when the robot is disabled. */
